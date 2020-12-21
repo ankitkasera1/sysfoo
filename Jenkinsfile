@@ -13,14 +13,11 @@ pipeline {
       }
     }
 
-    stage('Package') {
-      steps {
-        sh 'mvn package -DskipTests'
-        sleep 10
-        archiveArtifacts 'target/*.war'
+    stage('Package'){
+      steps{
+       sh 'mvn package -DskipTests'
       }
     }
-
   }
   tools {
     maven 'Maven 3.6.3'
