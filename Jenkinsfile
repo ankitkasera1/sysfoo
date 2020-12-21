@@ -18,3 +18,8 @@ pipeline {
        sh 'mvn package -DskipTests'
       }
     }
+  }
+  tools {
+    maven 'Maven 3.6.3'
+  }
+}
