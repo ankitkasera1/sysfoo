@@ -15,6 +15,7 @@ pipeline {
     }
 
     stage('Unit Test') {
+      when { changeRequest target: 'master' }
       agent {
         docker {
           image 'maven:3.6.3-jdk-11-slim'
