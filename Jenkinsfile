@@ -6,7 +6,6 @@ pipeline {
         docker {
           image 'maven:3.6.3-jdk-11-slim'
         }
-
       }
       steps {
         echo 'compile maven app'
@@ -15,7 +14,6 @@ pipeline {
     }
 
     stage('Unit Test') {
-      when { changeRequest target: 'master' }
       agent {
         docker {
           image 'maven:3.6.3-jdk-11-slim'
@@ -28,12 +26,16 @@ pipeline {
     }
 
     stage('Package') {
-       when { anyOf { branch 'master'; branch 'stage' } }
       agent {
         docker {
           image 'maven:3.6.3-jdk-11-slim'
         }
-
+      }
+      when {
+        anyOf {
+          branch 'master'
+          branch 'stage'
+        }
       }
       steps {
         sh 'mvn package -DskipTests'
@@ -41,11 +43,16 @@ pipeline {
     }
 
     stage('Docker B & P') {
-       when { anyOf { branch 'master'; branch 'stage' } }
+      when {
+        anyOf {
+          branch 'master'
+          branch 'stage'
+        }
+
+      }
       steps {
         script {
           docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
-
             def dockerImage = docker.build("kasera1/sysfoo:v${env.BUILD_ID}", "./")
 
             dockerImage.push()
@@ -59,6 +66,13 @@ pipeline {
       }
     }
 
+    stage('deploy dev') {
+      agent any
+      steps {
+        sh ' docker-compose up -d'
+      }
+    }
+    
   }
   tools {
     maven 'Maven 3.6.3'
