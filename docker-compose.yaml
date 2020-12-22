@@ -4,4 +4,4 @@ services:
   sysfoo:
     image: kasera1/sysfoo:latest
     ports:
-      - 2525:8080
+      - 8888:8080
