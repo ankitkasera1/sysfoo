@@ -31,14 +31,12 @@ pipeline {
         docker {
           image 'maven:3.6.3-jdk-11-slim'
         }
-
       }
       when {
         anyOf {
           branch 'master'
           branch 'stage'
         }
-
       }
       steps {
         sh 'mvn package -DskipTests'
@@ -76,7 +74,7 @@ pipeline {
         sh ' docker-compose up -d'
       }
     }
-
+    
   }
   tools {
     maven 'Maven 3.6.3'
