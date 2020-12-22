@@ -27,10 +27,16 @@ pipeline {
     }
 
     stage('Package') {
-       when { anyOf { branch 'master'; branch 'stage' } }
       agent {
         docker {
           image 'maven:3.6.3-jdk-11-slim'
+        }
+
+      }
+      when {
+        anyOf {
+          branch 'master'
+          branch 'stage'
         }
 
       }
@@ -40,7 +46,13 @@ pipeline {
     }
 
     stage('Docker B & P') {
-       when { anyOf { branch 'master'; branch 'stage' } }
+      when {
+        anyOf {
+          branch 'master'
+          branch 'stage'
+        }
+
+      }
       steps {
         script {
           docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
@@ -57,6 +69,14 @@ pipeline {
 
       }
     }
+
+    stage('deploy dev') {
+      agent any
+      steps {
+        sh ' docker-compose up -d'
+      }
+    }
+
   }
   tools {
     maven 'Maven 3.6.3'
