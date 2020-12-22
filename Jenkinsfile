@@ -54,7 +54,6 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
-
             def dockerImage = docker.build("kasera1/sysfoo:v${env.BUILD_ID}", "./")
 
             dockerImage.push()
